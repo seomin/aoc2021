@@ -1,8 +1,7 @@
 module Lib
-  ( lvl1a,
-    lvl1b,
-  )
-where
+  ( lvl1a
+  , lvl1b
+  ) where
 
 countIncreases :: [Integer] -> Int
 countIncreases xs = length $ filter (> 0) $ zipWith (-) (tail xs) xs
