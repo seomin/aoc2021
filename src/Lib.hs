@@ -4,7 +4,8 @@ module Lib
   ) where
 
 countIncreases :: [Integer] -> Int
-countIncreases xs = length $ filter (> 0) $ zipWith (-) (tail xs) xs
+-- countIncreases xs = length $ filter (> 0) $ zipWith (-) (tail xs) xs
+countIncreases = length . filter (< 0) . (zipWith (-) <*> tail)
 
 lvl1a :: String -> Int
 lvl1a = countIncreases . map read . lines
