@@ -1,32 +1,18 @@
-module Lib
-  ( lvl1a
-  , lvl1b
-  , level2a
-  , level2b
-  , Diving(..)
-  , Submarine(..)
-  , steer
-  , prod
+module Day02
+  ( day02
   ) where
 
 import Control.Monad (liftM2)
+import Support
 
--- Level 1
-countIncreases :: (Ord a, Num a) => [a] -> Int
--- countIncreases xs = length $ filter (> 0) $ zipWith (-) (tail xs) xs
-countIncreases = length . filter (< 0) . (zipWith (-) <*> tail)
+day02 = Day "02" "input/input.02" solution1 solution2
 
-lvl1a :: String -> Int
-lvl1a = countIncreases . map read . lines
+solution1 :: Solution
+solution1 = fromIntegral . uncurry (*) . foldl dive (0, 0) . map read
 
-window3 :: Num d => [d] -> [d]
--- window3 xs = zipWith3 (\a b c -> a + b + c) xs (tail xs) (tail $ tail xs)
-window3 = (zipWith3 (\a b c -> a + b + c) =<< tail) =<< tail
+solution2 :: Solution
+solution2 = fromIntegral . prod . foldl steer (Submarine 0 0 0) . map read
 
-lvl1b :: String -> Int
-lvl1b = countIncreases . window3 . map read . lines
-
--- Level 2
 data Diving
   = Forward Int
   | Down Int
@@ -46,9 +32,6 @@ dive (h, d) (Forward m) = (h + m, d)
 dive (h, d) (Down m) = (h, d + m)
 dive (h, d) (Up m) = (h, d - m)
 
-level2a :: String -> Int
-level2a = uncurry (*) . foldl dive (0, 0) . map read . lines
-
 steer :: Submarine -> Diving -> Submarine
 steer s (Forward x) = s {hPos = x + hPos s, depth = x * aim s + depth s}
 steer s (Down x) = s {aim = x + aim s}
@@ -61,9 +44,6 @@ data Submarine =
     , aim :: Int
     }
   deriving (Show)
-
-level2b :: String -> Int
-level2b = prod . foldl steer (Submarine 0 0 0) . map read . lines
 
 prod :: Submarine -> Int
 prod = liftM2 (*) hPos depth
