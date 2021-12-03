@@ -19,6 +19,7 @@ data Diving
   | Up Int
   deriving (Show)
 
+doRead :: [String] -> [(Diving, String)]
 doRead ("forward":m:rest) = [(Forward $ read m, unwords rest)]
 doRead ("down":m:rest) = [(Down $ read m, unwords rest)]
 doRead ("up":m:rest) = [(Up $ read m, unwords rest)]
