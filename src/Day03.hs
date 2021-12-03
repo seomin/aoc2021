@@ -9,13 +9,14 @@ import Support
 day03 = Day "03" "input/input.03" solution1 solution2
 
 solution1 :: Solution
-solution1 xs =
-  fromIntegral $
-  liftM2 (*) fst snd $
-  foldl dupInc (0, 0) $ foldl1 (zipWith (+)) $ map (map $ sign . digitToInt) xs
+solution1 =
+  fromIntegral .
+  liftM2 (*) fst snd . foldl dupInc (0, 0) . foldl balance (repeat 0)
 
-sign :: Int -> Int
-sign = (1 -) . (* 2)
+balance :: [Int] -> String -> [Int]
+balance (i:is) ('0':cs) = (i + 1) : balance is cs
+balance (i:is) ('1':cs) = (i - 1) : balance is cs
+balance _ _ = []
 
 dupInc :: (Int, Int) -> Int -> (Int, Int)
 dupInc (epsilon, gamma) agg
