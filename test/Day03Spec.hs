@@ -9,8 +9,8 @@ import Test.Hspec
 spec = do
   describe "part 1" $ do
     it "can solve the example" $ do part1 day03 exampleData `shouldBe` 198
-  -- describe "part 2" $ do
-  --   it "can solve the example" $ do part2 day03 exampleData `shouldBe` 900
+  describe "part 2" $ do
+    it "can solve the example" $ do part2 day03 exampleData `shouldBe` 230
 
 exampleData =
   [ "00100"
