@@ -4,7 +4,7 @@ module Day00
 
 import Support
 
-day00 = Day "00" "input/input.00" solution1 solution2
+day00 = Day "00" "input/00.txt" solution1 solution2
 
 solution1 :: Solution
 solution1 = error "Not implemented"

@@ -8,7 +8,7 @@ import Data.Function ((&))
 import Data.List (sort)
 import Support
 
-day03 = Day "03" "input/input.03" solution1 solution2
+day03 = Day "03" "input/03.txt" solution1 solution2
 
 solution1 :: Solution
 solution1 =

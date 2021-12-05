@@ -4,7 +4,7 @@ module Day01
 
 import Support
 
-day01 = Day "01" "input/input.01" solution1 solution2
+day01 = Day "01" "input/01.txt" solution1 solution2
 
 solution1 :: Solution
 solution1 = fromIntegral . countIncreases . map read

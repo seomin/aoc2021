@@ -5,7 +5,7 @@ module Day02
 import Control.Monad (liftM2)
 import Support
 
-day02 = Day "02" "input/input.02" solution1 solution2
+day02 = Day "02" "input/02.txt" solution1 solution2
 
 solution1 :: Solution
 solution1 = fromIntegral . uncurry (*) . foldl dive (0, 0) . map read
