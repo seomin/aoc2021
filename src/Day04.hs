@@ -6,7 +6,9 @@ module Day04
 
 import Data.List (delete, find)
 import Data.List.Split
+import Debug.Trace (trace, traceStack)
 import Support
+import Text.Printf (printf)
 
 day04 = Day "04" "input/04.txt" solution1 solution2
 
@@ -36,7 +38,11 @@ winners :: [Int] -> [Board] -> [(Board, Int)]
 winners [] _ = []
 winners (call:numbers) boards =
   case find winner nextBoards of
-    Just w -> (w, call) : winners numbers (delete w nextBoards)
+    Just w ->
+      traceStack
+        (printf "found winner %s with number %d" (show w) call)
+        (w, call) :
+      winners numbers (delete w nextBoards)
     Nothing -> winners numbers nextBoards
   where
     nextBoards = map (mark call) boards
@@ -63,6 +69,8 @@ solution2 (numberString:boardString) = fromIntegral $ unmarked * winningNumber
   where
     numbers = map read $ splitOn "," numberString
     boards = parseBoards boardString
-    (winner, winningNumber) = last $ winners numbers boards
+    (winner, winningNumber) =
+      last $ trace ("winners length " ++ show (length allWinners)) allWinners
+    allWinners = winners numbers boards
     unmarked = sum . map fst . filter (not . snd) $ winner
 solution2 _ = error "unreachable"
