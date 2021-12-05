@@ -22,6 +22,7 @@ description:         Please see the README on GitHub at <https://github.com/seom
 dependencies:
 - base >= 4.7 && < 5
 - hspec # HLS mucks around without this...
+- split
 
 library:
   source-dirs: src
@@ -36,6 +37,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - aoc2021
+    - split
 
 tests:
   aoc2021-test:

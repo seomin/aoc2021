@@ -29,6 +29,7 @@ library
       Day01
       Day02
       Day03
+      Day04
       Support
   other-modules:
       Paths_aoc2021
@@ -37,6 +38,7 @@ library
   build-depends:
       base >=4.7 && <5
     , hspec
+    , split
   default-language: Haskell2010
 
 executable aoc2021-exe
@@ -50,6 +52,7 @@ executable aoc2021-exe
       aoc2021
     , base >=4.7 && <5
     , hspec
+    , split
   default-language: Haskell2010
 
 test-suite aoc2021-test
@@ -59,6 +62,7 @@ test-suite aoc2021-test
       Day01Spec
       Day02Spec
       Day03Spec
+      Day04Spec
       Paths_aoc2021
   hs-source-dirs:
       test
@@ -67,4 +71,5 @@ test-suite aoc2021-test
       aoc2021
     , base >=4.7 && <5
     , hspec
+    , split
   default-language: Haskell2010
