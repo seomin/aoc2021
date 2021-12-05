@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - hspec # HLS mucks around without this...
 - split
+- containers
 
 library:
   source-dirs: src
@@ -38,6 +39,7 @@ executables:
     dependencies:
     - aoc2021
     - split
+    - containers
 
 tests:
   aoc2021-test:

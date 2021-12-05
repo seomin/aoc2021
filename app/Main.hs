@@ -4,6 +4,7 @@ import Day01
 import Day02
 import Day03
 import Day04
+import Day05
 import Support
 
 main :: IO ()
@@ -12,3 +13,4 @@ main = do
   run day02
   run day03
   run day04
+  run day05
