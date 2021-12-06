@@ -17,11 +17,7 @@ solve :: String -> Int -> Integer
 solve input days = sum $ simulate slots days
   where
     fishes = (map read $ splitOn "," input) :: [Int]
-    slots =
-      foldl
-        (\ss f -> setAt ss f (ss !! f + 1))
-        (replicate 9 (0 :: Integer))
-        fishes
+    slots = foldl (\ss f -> setAt ss f (ss !! f + 1)) (replicate 9 0) fishes
 
 simulate :: [Integer] -> Int -> [Integer]
 simulate slots 0 = slots
