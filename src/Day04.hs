@@ -2,6 +2,8 @@
 
 module Day04
   ( day04
+  , parseBoards
+  , winners
   ) where
 
 import Data.List (delete, find)
