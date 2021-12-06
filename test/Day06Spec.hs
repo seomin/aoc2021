@@ -11,7 +11,7 @@ spec = do
   describe "part 1" $ do
     it "can solve the example with 18 days" $ do
       exampleData <- liftIO $ readFile "test/input/06.txt"
-      part1 day06 (lines exampleData) `shouldBe` 26
+      solve (head $ lines exampleData) 18 `shouldBe` 26
     it "can solve the example with 80 days" $ do
       exampleData <- liftIO $ readFile "test/input/06.txt"
       part1 day06 (lines exampleData) `shouldBe` 5934

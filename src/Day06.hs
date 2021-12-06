@@ -2,6 +2,7 @@
 
 module Day06
   ( day06
+  , solve
   ) where
 
 import Data.List.Split (splitOn)
@@ -10,7 +11,10 @@ import Support
 day06 = Day "06" "input/06.txt" solution1 solution2
 
 solution1 :: Solution
-solution1 [input] = sum $ simulate slots 80
+solution1 [input] = solve input 80
+
+solve :: String -> Int -> Integer
+solve input days = sum $ simulate slots days
   where
     fishes = (map read $ splitOn "," input) :: [Int]
     slots =
@@ -39,11 +43,4 @@ setAt :: [a] -> Int -> a -> [a]
 setAt xs i x = take i xs ++ [x] ++ drop (i + 1) xs
 
 solution2 :: Solution
-solution2 [input] = sum $ simulate slots 256
-  where
-    fishes = (map read $ splitOn "," input) :: [Int]
-    slots =
-      foldl
-        (\ss f -> setAt ss f (ss !! f + 1))
-        (replicate 9 (0 :: Integer))
-        fishes
+solution2 [input] = solve input 256
