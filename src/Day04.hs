@@ -7,12 +7,10 @@ module Day04
   , winner
   ) where
 
-import Data.List (delete, find, partition)
-import Data.List.Split
+import Data.List (partition)
+import Data.List.Split (splitOn)
 import Data.Maybe (fromMaybe)
-import Debug.Trace (trace, traceStack)
 import Support
-import Text.Printf (printf)
 
 day04 = Day "04" "input/04.txt" solution1 solution2
 
