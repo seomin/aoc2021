@@ -22,12 +22,18 @@ solution1 =
 solution2 :: Solution
 solution2 = sum . map (fromIntegral . decodeLine)
 
+type Decoder = String -> Char
+
 decodeLine :: String -> Int
-decodeLine line = read $ concatMap decodeDigit $ words digitString
+decodeLine line = read $ map decoder $ words digitString
   where
     [patternString, digitString] = splitOn "|" line
     signals = words patternString
-    -- build decoder
+    decoder = buildDecoder signals
+
+buildDecoder :: [String] -> Decoder
+buildDecoder signals = decodeDigit
+  where
     seven = patternOfLength 3 signals
     one = patternOfLength 2 signals
     four = patternOfLength 4 signals
@@ -48,16 +54,16 @@ decodeLine line = read $ concatMap decodeDigit $ words digitString
         else one !! 1
     [c] = one \\ [f]
     decodeDigit digit
-      | digit ~= [a, b, c, e, f, g] = "0"
-      | digit ~= [c, f] = "1"
-      | digit ~= [a, c, d, e, g] = "2"
-      | digit ~= [a, c, d, f, g] = "3"
-      | digit ~= [b, c, d, f] = "4"
-      | digit ~= [a, b, d, f, g] = "5"
-      | digit ~= [a, b, d, e, f, g] = "6"
-      | digit ~= [a, c, f] = "7"
-      | digit ~= [a, b, c, d, e, f, g] = "8"
-      | digit ~= [a, b, c, d, f, g] = "9"
+      | digit ~= [a, b, c, e, f, g] = '0'
+      | digit ~= [c, f] = '1'
+      | digit ~= [a, c, d, e, g] = '2'
+      | digit ~= [a, c, d, f, g] = '3'
+      | digit ~= [b, c, d, f] = '4'
+      | digit ~= [a, b, d, f, g] = '5'
+      | digit ~= [a, b, d, e, f, g] = '6'
+      | digit ~= [a, c, f] = '7'
+      | digit ~= [a, b, c, d, e, f, g] = '8'
+      | digit ~= [a, b, c, d, f, g] = '9'
       | otherwise =
         error $ "unreachable: " ++ digit ++ ", " ++ show [a, b, c, d, e, f, g]
 
