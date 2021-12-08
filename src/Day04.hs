@@ -3,11 +3,13 @@
 module Day04
   ( day04
   , parseBoards
-  , winners
+  , play
+  , winner
   ) where
 
-import Data.List (delete, find)
+import Data.List (delete, find, partition)
 import Data.List.Split
+import Data.Maybe (fromMaybe)
 import Debug.Trace (trace, traceStack)
 import Support
 import Text.Printf (printf)
@@ -15,64 +17,80 @@ import Text.Printf (printf)
 day04 = Day "04" "input/04.txt" solution1 solution2
 
 solution1 :: Solution
-solution1 (numberString:boardString) = fromIntegral $ unmarked * winningNumber
+solution1 (numberString:boardString) = result winner
   where
     numbers = map read $ splitOn "," numberString
     boards = parseBoards boardString
-    (winner, winningNumber) = head $ winners numbers boards
-    unmarked = sum . map fst . filter (not . snd) $ winner
+    winner = head $ play numbers boards
 solution1 _ = error "unreachable"
+
+type Cell = (Int, Bool)
+
+data Board =
+  Board
+    { cells :: [Cell]
+    , won :: Bool
+    , winningNumber :: Maybe Int
+    }
+  deriving (Show)
 
 parseBoards :: [String] -> [Board]
 parseBoards [] = []
 parseBoards ("":bs) = parseBoards bs
 parseBoards (a:b:c:d:e:rest) = board : parseBoards rest
   where
-    board =
-      parseLine a ++ parseLine b ++ parseLine c ++ parseLine d ++ parseLine e
+    cs = parseLine a ++ parseLine b ++ parseLine c ++ parseLine d ++ parseLine e
+    board = Board cs False Nothing
     parseLine :: String -> [(Int, Bool)]
     parseLine = map ((, False) . read) . words
 parseBoards _ = error "unreachable"
 
-type Board = [(Int, Bool)]
-
-winners :: [Int] -> [Board] -> [(Board, Int)]
-winners [] _ = []
-winners (call:numbers) boards =
-  case find winner nextBoards of
-    Just w ->
-      traceStack
-        (printf "found winner %s with number %d" (show w) call)
-        (w, call) :
-      winners numbers (delete w nextBoards)
-    Nothing -> winners numbers nextBoards
+play :: [Int] -> [Board] -> [Board]
+play [] boards = []
+play (call:calls) boards = winners ++ play calls losers
   where
-    nextBoards = map (mark call) boards
+    nextBoards = map (markBoard call) boards
+    (winners, losers) = partition won nextBoards
 
-winner :: Board -> Bool
+winner :: [Cell] -> Bool
 winner b = winningRow b || winningCol b
 
-winningCol :: Board -> Bool
-winningCol board =
-  or [and [snd $ board !! (i + j) | j <- [0,5 .. 20]] | i <- [0 .. 4]]
+winningCol :: [Cell] -> Bool
+winningCol cs =
+  or [and [snd $ cs !! (i + j) | j <- [0,5 .. 20]] | i <- [0 .. 4]]
 
-winningRow :: Board -> Bool
+winningRow :: [Cell] -> Bool
 winningRow [] = False
-winningRow board = (all snd . take 5) board || winningRow (drop 5 board)
+winningRow cs = (all snd . take 5) cs || winningRow (drop 5 cs)
 
-mark :: Int -> Board -> Board
+markBoard :: Int -> Board -> Board
+markBoard _ board@Board {won = True} = board
+markBoard call board =
+  board {cells = marked, won = wonNow, winningNumber = maybeCall}
+  where
+    marked = mark call $ cells board
+    wonNow = winner marked
+    maybeCall =
+      if wonNow
+        then Just call
+        else Nothing
+
+mark :: Int -> [Cell] -> [Cell]
 mark number [] = []
 mark number ((n, m):rest)
   | number == n = (n, True) : rest
   | otherwise = (n, m) : mark number rest
 
+result :: Board -> Integer
+result board = fromIntegral $ unmarked * fromMaybe 0 (winningNumber board)
+  where
+    unmarked = sum . map fst . filter (not . snd) $ cells board
+
 solution2 :: Solution
-solution2 (numberString:boardString) = fromIntegral $ unmarked * winningNumber
+solution2 (numberString:boardString) = result lastWinner
   where
     numbers = map read $ splitOn "," numberString
     boards = parseBoards boardString
-    (winner, winningNumber) =
-      last $ trace ("winners length " ++ show (length allWinners)) allWinners
-    allWinners = winners numbers boards
-    unmarked = sum . map fst . filter (not . snd) $ winner
+    allWinners = play numbers boards
+    lastWinner = last allWinners
 solution2 _ = error "unreachable"
