@@ -4,7 +4,6 @@ import Control.Monad.Trans.State.Strict (State, evalState, get, put)
 import Data.Char (digitToInt)
 import Data.List (sort, zip5)
 import Data.Maybe (mapMaybe)
-import Debug.Trace (traceShowId)
 import GHC.Arr (Array, (!), (//), array, bounds, inRange, indices)
 import Support
 
@@ -35,7 +34,6 @@ maybeLow (top, left, this, right, bot) =
 solution2 :: Solution
 solution2 lines =
   product $
-  traceShowId $
   take 3 $ reverse $ sort $ evalState (findBasins $ indices field) field
   where
     field = parseField lines
