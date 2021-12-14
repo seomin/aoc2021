@@ -24,6 +24,7 @@ dependencies:
 - hspec # HLS mucks around without this...
 - split
 - containers
+- transformers
 
 library:
   source-dirs: src
@@ -40,6 +41,7 @@ executables:
     - aoc2021
     - split
     - containers
+    - transformers
 
 tests:
   aoc2021-test:

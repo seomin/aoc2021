@@ -18,4 +18,4 @@ countIncreases = length . filter (< 0) . (zipWith (-) <*> tail)
 
 window3 :: Num d => [d] -> [d]
 -- window3 xs = zipWith3 (\a b c -> a + b + c) xs (tail xs) (tail $ tail xs)
-window3 = (zipWith3 (\a b c -> a + b + c) =<< tail) =<< tail
+window3 = tail >>= (tail >>= zipWith3 (\a b c -> a + b + c))
