@@ -48,9 +48,9 @@ findBasins (p:ps) = do
 findBasin :: Point -> State (Array Point Char) Integer
 findBasin p = do
   a <- get
-  if inRange (bounds a) p && free (a ! p)
+  if bounds a `inRange` p && free (a ! p)
     then do
-      put $ a // [(p, 'x')]
+      put $ (//) a [(p, 'x')]
       t <- findBasin (fst p, snd p - 1)
       l <- findBasin (fst p - 1, snd p)
       r <- findBasin (fst p + 1, snd p)
