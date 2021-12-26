@@ -9,36 +9,10 @@ import Data.Maybe (fromJust)
 import GHC.Arr (Array, (!), (//), array, listArray)
 import Support
 
-{-
-start-A
-start-b
-A-c
-A-b
-b-d
-A-end
-b-end
-
-0 start
-1 A
-2 b
-3 c
-4 d
-5 end
-
- 012345
-0 m
-1s
-2
-3
-4
-5
-6
-
--}
 day12 = Day "12" "input/12.txt" solution1 solution2
 
 solution1 :: Solution
-solution1 input = findPaths graph size startIndex endIndex
+solution1 input = findPaths graph size True startIndex endIndex
   where
     (graph, size, startIndex, endIndex) = parse input
 
@@ -46,30 +20,43 @@ type Point = (Int, Int)
 
 data Passage
   = None
+  | MaybeOneMoreTime
   | Single
   | Multiple
-  deriving (Show)
+  deriving (Eq, Show)
 
 dumpGraph :: Array Point Passage -> Int -> String
 dumpGraph g s =
   unlines
     [unwords [show (g ! (x, y)) | y <- [0 .. (s - 1)]] | x <- [0 .. (s - 1)]]
 
-findPaths :: Array Point Passage -> Int -> Int -> Int -> Integer
-findPaths graph size from end = sum $ map findPaths' [0 .. (size - 1)]
+findPaths :: Array Point Passage -> Int -> Bool -> Int -> Int -> Integer
+findPaths graph size usedSingleTwice from end =
+  sum $ map findPaths' [0 .. (size - 1)]
   where
     findPaths' to =
       case graph ! (from, to) of
         None -> 0
+        MaybeOneMoreTime ->
+          if usedSingleTwice
+            then 0
+            else findPaths graph size True to end
         Single ->
           if end == to
             then 1
             else findPaths
-                   (graph // [((from', to), None) | from' <- [0 .. (size - 1)]])
+                   (graph //
+                    [ ( (from', to)
+                      , if graph ! (from', to) == None
+                          then None
+                          else MaybeOneMoreTime)
+                    | from' <- [0 .. (size - 1)]
+                    ])
                    size
+                   usedSingleTwice
                    to
                    end
-        Multiple -> findPaths graph size to end
+        Multiple -> findPaths graph size usedSingleTwice to end
 
 parse :: [String] -> (Array Point Passage, Int, Int, Int)
 parse ls =
@@ -110,4 +97,6 @@ makeAss x y to =
              else Single)
 
 solution2 :: Solution
-solution2 = error "Not implemented"
+solution2 input = findPaths graph size False startIndex endIndex
+  where
+    (graph, size, startIndex, endIndex) = parse input
