@@ -1,6 +1,4 @@
-module Day00
-  ( day00
-  ) where
+module Day00 where
 
 import Support
 
